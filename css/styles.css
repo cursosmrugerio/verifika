@@ -516,42 +516,96 @@ button {
     color: rgba(255, 255, 255, 0.9);
 }
 
-.documentos-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--spacing-md);
-    max-width: 1000px;
+.noticias-accordion {
+    max-width: 1200px;
     margin: 0 auto;
 }
 
-.documento-card {
-    background: rgba(255, 255, 255, 0.1);
-    padding: var(--spacing-lg);
-    border-radius: var(--radius-lg);
-    text-align: center;
-    transition: var(--transition);
+.accordion-item {
+    margin-bottom: var(--spacing-md);
+}
+
+.accordion-button {
+    width: 100%;
+    background: var(--color-primary);
+    color: var(--color-white);
+    padding: var(--spacing-md) var(--spacing-lg);
+    border: none;
+    border-radius: var(--radius-md);
     display: flex;
-    flex-direction: column;
     align-items: center;
     gap: var(--spacing-md);
-    border: 2px solid transparent;
-}
-
-.documento-card:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: var(--color-primary);
-    transform: translateY(-5px);
-}
-
-.documento-card i {
-    font-size: 3rem;
-    color: var(--color-primary);
-}
-
-.documento-card span {
-    color: var(--color-white);
+    cursor: pointer;
+    font-size: 1rem;
     font-weight: 500;
-    line-height: 1.5;
+    transition: var(--transition);
+    text-align: left;
+}
+
+.accordion-button:hover {
+    background: var(--color-primary-light);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.accordion-button.active {
+    background: var(--color-primary-light);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.accordion-icon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    transition: var(--transition);
+}
+
+.accordion-button.active .accordion-icon {
+    transform: rotate(180deg);
+}
+
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.95);
+    color: var(--color-text);
+    border-bottom-left-radius: var(--radius-md);
+    border-bottom-right-radius: var(--radius-md);
+    transition: max-height 0.4s ease, padding 0.4s ease;
+}
+
+.accordion-content.active {
+    max-height: 2000px;
+    padding: var(--spacing-lg);
+    border: 2px solid var(--color-primary);
+    border-top: none;
+}
+
+.accordion-content p {
+    margin-bottom: var(--spacing-md);
+    line-height: 1.8;
+    text-align: justify;
+}
+
+.accordion-content p:last-child {
+    margin-bottom: 0;
+}
+
+.accordion-content strong {
+    color: var(--color-primary);
+    font-size: 1.1rem;
+}
+
+.accordion-content a {
+    color: var(--color-primary);
+    text-decoration: none;
+    word-break: break-all;
+    transition: var(--transition);
+}
+
+.accordion-content a:hover {
+    text-decoration: underline;
+    color: var(--color-primary-light);
 }
 
 /* ========================================
@@ -760,8 +814,13 @@ button {
         min-width: calc(33.333% - var(--spacing-md));
     }
 
-    .documentos-grid {
-        grid-template-columns: 1fr;
+    .accordion-button {
+        font-size: 0.95rem;
+        padding: var(--spacing-sm) var(--spacing-md);
+    }
+
+    .accordion-button span {
+        line-height: 1.4;
     }
 
     .contacto-wrapper {

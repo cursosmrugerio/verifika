@@ -227,6 +227,34 @@ if (carouselTrack && carouselDots) {
 }
 
 // ========================================
+// Accordion Functionality (Noticias Section)
+// ========================================
+const accordionButtons = document.querySelectorAll('.accordion-button');
+
+accordionButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        const targetId = button.getAttribute('data-accordion');
+        const content = document.getElementById(targetId);
+        const isActive = button.classList.contains('active');
+
+        // Close all accordions
+        accordionButtons.forEach(btn => {
+            btn.classList.remove('active');
+        });
+
+        document.querySelectorAll('.accordion-content').forEach(item => {
+            item.classList.remove('active');
+        });
+
+        // Toggle current accordion
+        if (!isActive) {
+            button.classList.add('active');
+            content.classList.add('active');
+        }
+    });
+});
+
+// ========================================
 // Form Handling
 // ========================================
 const contactForm = document.getElementById('contactForm');
