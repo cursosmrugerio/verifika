@@ -699,12 +699,65 @@ button {
     justify-content: center;
     gap: var(--spacing-sm);
     transition: var(--transition);
+    cursor: pointer;
 }
 
-.btn-submit:hover {
+.btn-submit:hover:not(:disabled) {
     background: var(--color-primary-dark);
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
+}
+
+.btn-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.btn-submit .fa-spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Form Messages */
+.form-message {
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-weight: 500;
+    transition: opacity 0.3s ease;
+    box-shadow: var(--shadow-md);
+}
+
+.form-message i {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.form-message-success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.form-message-success i {
+    color: #28a745;
+}
+
+.form-message-error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.form-message-error i {
+    color: #dc3545;
 }
 
 .contacto-map {

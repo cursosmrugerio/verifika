@@ -255,12 +255,15 @@ accordionButtons.forEach(button => {
 });
 
 // ========================================
-// Form Handling
+// Form Handling with Google Sheets
 // ========================================
 const contactForm = document.getElementById('contactForm');
 
+// IMPORTANT: Replace this URL with your Google Apps Script Web App URL
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyTWQZiHm-kmc-9IlSQWRyYVbQJQGuKFSX-k0g1CVMOkjqqADGh-lXAfuQm7XCQ15Go/exec';
+
 if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
+    contactForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         // Get form data
@@ -269,39 +272,67 @@ if (contactForm) {
 
         // Validate checkbox
         if (!data.acepto) {
-            alert('Por favor acepta los términos para continuar.');
+            showMessage('Por favor acepta los términos para continuar.', 'error');
             return;
         }
 
-        // Here you would typically send the data to a server
-        console.log('Form data:', data);
+        // Get submit button and show loading state
+        const submitButton = contactForm.querySelector('.btn-submit');
+        const originalButtonText = submitButton.innerHTML;
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
 
-        // Show success message
-        alert('¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.');
+        try {
+            // Send data to Google Sheets
+            const response = await fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors', // Important for Google Apps Script
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
 
-        // Reset form
-        contactForm.reset();
-
-        // In a real implementation, you would do something like:
-        /*
-        fetch('/api/contact', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        })
-        .then(response => response.json())
-        .then(data => {
-            alert('¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.');
+            // Note: with 'no-cors' mode, we can't read the response
+            // We assume success if no error was thrown
+            showMessage('¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.', 'success');
             contactForm.reset();
-        })
-        .catch(error => {
-            alert('Hubo un error al enviar el formulario. Por favor intenta de nuevo.');
+
+        } catch (error) {
             console.error('Error:', error);
-        });
-        */
+            showMessage('Hubo un error al enviar el formulario. Por favor intenta de nuevo.', 'error');
+        } finally {
+            // Restore button state
+            submitButton.disabled = false;
+            submitButton.innerHTML = originalButtonText;
+        }
     });
+}
+
+// Function to show messages
+function showMessage(message, type) {
+    // Remove existing message if any
+    const existingMessage = document.querySelector('.form-message');
+    if (existingMessage) {
+        existingMessage.remove();
+    }
+
+    // Create message element
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `form-message form-message-${type}`;
+    messageDiv.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+        <span>${message}</span>
+    `;
+
+    // Insert message before the form
+    contactForm.parentNode.insertBefore(messageDiv, contactForm);
+
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+        messageDiv.style.opacity = '0';
+        setTimeout(() => messageDiv.remove(), 300);
+    }, 5000);
 }
 
 // ========================================
